@@ -131,6 +131,7 @@ teardown() {
   assert_success
   assert_output_not_contains "fn-plugin-property-get-default: command not found"
   assert_output_not_contains "fn-plugin-property-get: command not found"
+  assert_output_not_contains "/common/property-functions: No such file or directory"
 }
 
 @test "(core) git-remote (off-port)" {
