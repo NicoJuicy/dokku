@@ -637,7 +637,7 @@ release_and_deploy() {
 
   if verify_image "$IMAGE"; then
     if ! declare -f -F fn-plugin-property-get-default >/dev/null; then
-      source "$PLUGIN_AVAILABLE_PATH/common/property-functions"
+      source "$PLUGIN_CORE_AVAILABLE_PATH/common/property-functions"
     fi
 
     IMAGE_SOURCE_TYPE="$(get_image_builder_type "$IMAGE" "$APP")"
@@ -980,7 +980,7 @@ fn-migrate-config-to-property() {
   fi
 
   if ! declare -f -F fn-plugin-property-write >/dev/null; then
-    source "$PLUGIN_AVAILABLE_PATH/common/property-functions"
+    source "$PLUGIN_CORE_AVAILABLE_PATH/common/property-functions"
   fi
 
   if [[ -n "$GLOBAL_CONFIG_VAR" ]]; then
