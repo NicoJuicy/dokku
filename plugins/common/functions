@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -eo pipefail
 [[ $DOKKU_TRACE ]] && set -x
+source "$PLUGIN_CORE_AVAILABLE_PATH/common/property-functions"
 
 has_tty() {
   declare desc="return 0 if we have a tty"
@@ -973,10 +974,6 @@ fn-migrate-config-to-property() {
   # todo: refactor to remove config_unset usage
   if ! declare -f -F config_unset >/dev/null; then
     source "$PLUGIN_AVAILABLE_PATH/config/functions"
-  fi
-
-  if ! declare -f -F fn-plugin-property-write >/dev/null; then
-    source "$PLUGIN_CORE_AVAILABLE_PATH/common/property-functions"
   fi
 
   if [[ -n "$GLOBAL_CONFIG_VAR" ]]; then

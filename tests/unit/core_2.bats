@@ -112,6 +112,27 @@ teardown() {
   assert_urls "http://dokku.example.com" "http://${TEST_APP}.${DOKKU_DOMAIN}" "https://dokku.example.com" "https://${TEST_APP}.${DOKKU_DOMAIN}" "https://test.${DOKKU_DOMAIN}" "http://test.${DOKKU_DOMAIN}"
 }
 
+@test "(core) sourcing common/functions exposes fn-plugin-property-* helpers" {
+  run /bin/bash -c "source $PLUGIN_CORE_AVAILABLE_PATH/common/functions && declare -f -F fn-plugin-property-get-default"
+  echo "output: $output"
+  echo "status: $status"
+  assert_success
+
+  run /bin/bash -c "source $PLUGIN_CORE_AVAILABLE_PATH/common/functions && declare -f -F fn-plugin-property-write"
+  echo "output: $output"
+  echo "status: $status"
+  assert_success
+}
+
+@test "(core) release_and_deploy does not emit command not found errors" {
+  run deploy_app
+  echo "output: $output"
+  echo "status: $status"
+  assert_success
+  assert_output_not_contains "fn-plugin-property-get-default: command not found"
+  assert_output_not_contains "fn-plugin-property-get: command not found"
+}
+
 @test "(core) git-remote (off-port)" {
   run deploy_app nodejs-express ssh://dokku@127.0.0.1:22333/$TEST_APP
   echo "output: $output"
