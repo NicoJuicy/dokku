@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -eo pipefail
 [[ $DOKKU_TRACE ]] && set -x
-source "$PLUGIN_CORE_AVAILABLE_PATH/common/property-functions"
 
 has_tty() {
   declare desc="return 0 if we have a tty"
@@ -637,6 +636,10 @@ release_and_deploy() {
   local exit_code=0
 
   if verify_image "$IMAGE"; then
+    if ! declare -f -F fn-plugin-property-get-default >/dev/null; then
+      source "$PLUGIN_AVAILABLE_PATH/common/property-functions"
+    fi
+
     IMAGE_SOURCE_TYPE="$(get_image_builder_type "$IMAGE" "$APP")"
     local DOKKU_APP_SKIP_DEPLOY="$(fn-plugin-property-get-default "ps" "$APP" "skip-deploy" "")"
     local DOKKU_GLOBAL_SKIP_DEPLOY="$(fn-plugin-property-get-default "ps" "--global" "skip-deploy" "")"
@@ -974,6 +977,10 @@ fn-migrate-config-to-property() {
   # todo: refactor to remove config_unset usage
   if ! declare -f -F config_unset >/dev/null; then
     source "$PLUGIN_AVAILABLE_PATH/config/functions"
+  fi
+
+  if ! declare -f -F fn-plugin-property-write >/dev/null; then
+    source "$PLUGIN_AVAILABLE_PATH/common/property-functions"
   fi
 
   if [[ -n "$GLOBAL_CONFIG_VAR" ]]; then
