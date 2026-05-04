@@ -112,6 +112,16 @@ teardown() {
   assert_urls "http://dokku.example.com" "http://${TEST_APP}.${DOKKU_DOMAIN}" "https://dokku.example.com" "https://${TEST_APP}.${DOKKU_DOMAIN}" "https://test.${DOKKU_DOMAIN}" "http://test.${DOKKU_DOMAIN}"
 }
 
+@test "(core) release_and_deploy does not emit command not found errors" {
+  run deploy_app
+  echo "output: $output"
+  echo "status: $status"
+  assert_success
+  assert_output_not_contains "fn-plugin-property-get-default: command not found"
+  assert_output_not_contains "fn-plugin-property-get: command not found"
+  assert_output_not_contains "/common/property-functions: No such file or directory"
+}
+
 @test "(core) git-remote (off-port)" {
   run deploy_app nodejs-express ssh://dokku@127.0.0.1:22333/$TEST_APP
   echo "output: $output"

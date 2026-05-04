@@ -636,6 +636,10 @@ release_and_deploy() {
   local exit_code=0
 
   if verify_image "$IMAGE"; then
+    if ! declare -f -F fn-plugin-property-get-default >/dev/null; then
+      source "$PLUGIN_CORE_AVAILABLE_PATH/common/property-functions"
+    fi
+
     IMAGE_SOURCE_TYPE="$(get_image_builder_type "$IMAGE" "$APP")"
     local DOKKU_APP_SKIP_DEPLOY="$(fn-plugin-property-get-default "ps" "$APP" "skip-deploy" "")"
     local DOKKU_GLOBAL_SKIP_DEPLOY="$(fn-plugin-property-get-default "ps" "--global" "skip-deploy" "")"
