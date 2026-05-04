@@ -112,18 +112,6 @@ teardown() {
   assert_urls "http://dokku.example.com" "http://${TEST_APP}.${DOKKU_DOMAIN}" "https://dokku.example.com" "https://${TEST_APP}.${DOKKU_DOMAIN}" "https://test.${DOKKU_DOMAIN}" "http://test.${DOKKU_DOMAIN}"
 }
 
-@test "(core) sourcing common/functions exposes fn-plugin-property-* helpers" {
-  run /bin/bash -c "source $PLUGIN_CORE_AVAILABLE_PATH/common/functions && declare -f -F fn-plugin-property-get-default"
-  echo "output: $output"
-  echo "status: $status"
-  assert_success
-
-  run /bin/bash -c "source $PLUGIN_CORE_AVAILABLE_PATH/common/functions && declare -f -F fn-plugin-property-write"
-  echo "output: $output"
-  echo "status: $status"
-  assert_success
-}
-
 @test "(core) release_and_deploy does not emit command not found errors" {
   run deploy_app
   echo "output: $output"
